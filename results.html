@@ -43,6 +43,16 @@
         color: #999;
       }
     </style>
+
+    <script src="./assets/js/sweetalert2@11.js"></script>
+    <script src="./assets/js/email.min.js"></script>
+    <script type="text/javascript">
+      (() => {
+        emailjs.init({
+          publicKey: "Kk-qliMmXacXuciGt",
+        });
+      })();
+    </script>
   </head>
   <body>
     <main class="w-full">
@@ -79,7 +89,7 @@
           >
           <a
             class="navbar-brand fw-semibold d-block d-md-none"
-            style="font-size: 15px;"
+            style="font-size: 15px"
             href="#"
             >MY TENANT LAWYER</a
           >
@@ -285,30 +295,38 @@
                   <div class="row g-3">
                     <div class="col-md-6">
                       <input
+                        required
                         type="text"
                         class="form-control rounded-3 p-3"
                         placeholder="Name"
+                        name="name"
                       />
                     </div>
                     <div class="col-md-6">
                       <input
+                        required
                         type="text"
                         class="form-control rounded-3 p-3"
                         placeholder="Property Address"
+                        name="address"
                       />
                     </div>
                     <div class="col-md-6">
                       <input
+                        required
                         type="email"
                         class="form-control rounded-3 p-3"
                         placeholder="Email"
+                        name="email"
                       />
                     </div>
                     <div class="col-md-6">
                       <input
+                        required
                         type="tel"
                         class="form-control rounded-3 p-3"
                         placeholder="Phone"
+                        name="phone"
                       />
                     </div>
                     <div class="col-12">
@@ -316,11 +334,14 @@
                         class="form-control rounded-3 p-3"
                         rows="4"
                         placeholder="Comments / Questions"
+                        required
+                        name="comments_or_questions"
                       ></textarea>
                     </div>
                     <div class="col-12 text-center">
                       <button
                         type="submit"
+                        id="submit"
                         class="btn text-white px-5 py-3 rounded-3"
                         style="background-color: #2f4c87"
                       >
@@ -329,6 +350,44 @@
                     </div>
                   </div>
                 </form>
+                <script>
+                  $(() => {
+                    $("form").submit((ev) => {
+                      ev.preventDefault();
+                      let $form = $("form");
+                      $("#submit").prop("disabled", true).text("SENDING...");
+
+                      let data = $form.serialize();
+                      let params = new URLSearchParams(data);
+                      let config = {};
+                      for (const [key, value] of params.entries()) {
+                        config[key] = value.trim();
+                      }
+
+                      emailjs
+                        .send("service_vppozvb", "template_bacb05n", config)
+                        .then(
+                          function (response) {
+                            Swal.fire({
+                              title: "Success",
+                              text: "Message sent successfully!",
+                              icon: "success",
+                            });
+                            $form[0].reset();
+                            $("#submit").prop("disabled", false).text("SUBMIT");
+                          },
+                          function (error) {
+                            Swal.fire({
+                              title: "Error",
+                              text: "Failed to send message!",
+                              icon: "error",
+                            });
+                            $("#submit").prop("disabled", false).text("SUBMIT");
+                          }
+                        );
+                    });
+                  });
+                </script>
               </div>
             </div>
           </div>
@@ -338,14 +397,32 @@
           <div class="row align-items-center">
             <!-- Left: Navigation Links -->
             <div class="col-md-4 text-md-start text-center mb-3 mb-md-0">
-              <a href="./index.html" class="text-decoration-none text-white me-3">Home</a>
-              <a href="./about.html" class="text-decoration-none text-white me-3">About</a>
-              <a href="./practice_area.html" class="text-decoration-none text-white me-3"
+              <a
+                href="./index.html"
+                class="text-decoration-none text-white me-3"
+                >Home</a
+              >
+              <a
+                href="./about.html"
+                class="text-decoration-none text-white me-3"
+                >About</a
+              >
+              <a
+                href="./practice_area.html"
+                class="text-decoration-none text-white me-3"
                 >Practice Areas</a
               >
-              <a href="./press.html" class="text-decoration-none text-white me-3">Press</a>
-              <a href="./results.html" class="text-decoration-none text-white">Results</a>
-              <a href="./contact.html" class="text-decoration-none text-white ms-3"
+              <a
+                href="./press.html"
+                class="text-decoration-none text-white me-3"
+                >Press</a
+              >
+              <a href="./results.html" class="text-decoration-none text-white"
+                >Results</a
+              >
+              <a
+                href="./contact.html"
+                class="text-decoration-none text-white ms-3"
                 >Contact Us</a
               >
             </div>
